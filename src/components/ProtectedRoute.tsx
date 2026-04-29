@@ -1,11 +1,10 @@
-import { ReactNode } from "react";
+import { forwardRef, ReactNode } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth, AppRole } from "@/hooks/useAuth";
 
-export default function ProtectedRoute({
-  children,
-  roles,
-}: { children: ReactNode; roles?: AppRole[] }) {
+interface Props { children: ReactNode; roles?: AppRole[] }
+
+const ProtectedRoute = forwardRef<HTMLDivElement, Props>(({ children, roles }, _ref) => {
   const { user, loading, hasRole, isAdmin } = useAuth();
   if (loading) {
     return <div className="min-h-[50vh] flex items-center justify-center text-muted-foreground">Loading…</div>;
@@ -15,4 +14,7 @@ export default function ProtectedRoute({
     return <Navigate to="/" replace />;
   }
   return <>{children}</>;
-}
+});
+ProtectedRoute.displayName = "ProtectedRoute";
+
+export default ProtectedRoute;
